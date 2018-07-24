@@ -129,11 +129,10 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
 
     /* finalize public crowdsale */
     function finalize() public onlyOwner whenPaused{
-        require(block.number >= endBlock, "EndBlock not reached yet");
+        //require(hasEnded(), "EndBlock not reached yet");
         
         if(hardCap > 0){
-            token.mint(msg.sender, hardCap);        
-            KYLToken(token).burn(hardCap);
+            token.mint(0x0, hardCap);        
         }
 
         KYLToken(token).unpause();

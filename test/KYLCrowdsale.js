@@ -7,6 +7,9 @@ contract('KYLCrowdsale', (accounts) =>{
     const pubInvestor = accounts[2];
     const extInvestor = accounts[3];
     const airDropAddr = accounts[4];
+    const pbextInvestor = accounts[5];
+    const blackInvestor = accounts[6];
+    const KYLTokensUser = accounts[7];
 
     it('should deploy crowdsale and token contract', (done) =>{
         KYLCrowdsale.deployed().then(async (ins) =>{
@@ -175,5 +178,65 @@ contract('KYLCrowdsale', (accounts) =>{
             done();
         });
     });
+
+    it('should be able to buy externally at Public ICO', (done) =>{
+        KYLCrowdsale.deployed().then(async (ins) =>{
+            await ins.mintTo(pbextInvestor, 48000000);
+            await ins.mintTo(blackInvestor, 500000);
+            const token = await ins.token.call();
+            const kylToken = KYLToken.at(token);
+            const amount = await kylToken.balanceOf(pbextInvestor);
+            assert.equal(amount.toNumber() / (10 ** 18), 48000000, 'Cannot buy tokens');
+            done();
+        });
+    });
+
+    it('should be paused', (done) =>{
+        KYLCrowdsale.deployed().then(async (ins) =>{
+            await ins.pause();
+            const paused = await ins.paused.call();
+            assert.equal(paused, true, 'Cannot pause');
+            done();
+        });
+    });
+
+    it('should be able to close Public ICO', (done) =>{
+        KYLCrowdsale.deployed().then(async (ins) =>{
+            await ins.finalize();
+            const token = await ins.token.call();
+            const kylToken = KYLToken.at(token);
+            const status = await kylToken.paused.call();
+            assert.equal(status, false, 'Cannot finish');
+            done();
+        });
+    });
+
+    it('should be able to transfer tokens after end', (done) =>{
+        KYLCrowdsale.deployed().then(async (ins) =>{
+            const token = await ins.token.call();
+            const kylToken = KYLToken.at(token);
+            await kylToken.transfer(blackInvestor, 500000, {from: pubInvestor});
+            const amount = await kylToken.balanceOf(blackInvestor);
+            assert.equal(amount.toNumber() / (10 ** 18), 500000, 'Cannot buy tokens');
+            done();
+        });
+    });
+
+    it('should be able to freeze tokens', (done) =>{
+        KYLCrowdsale.deployed().then(async (ins) =>{
+            await ins.freezeTokens(blackInvestor);
+            done();
+        });
+    });
+
+    it('shouldnt be able to transfer tokens', (done) =>{
+        KYLCrowdsale.deployed().then(async (ins) =>{
+            const token = await ins.token.call();
+            const kylToken = KYLToken.at(token);
+            await kylToken.transfer(KYLTokensUser, 500000, {from: blackInvestor});
+            done();
+        });
+    });
+
 });
 

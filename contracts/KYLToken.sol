@@ -65,41 +65,100 @@ contract Pausable is Ownable {
     }
 }
 
-contract ERC20Basic {
+contract ERC223Basic {
     uint256 public totalSupply;
     function balanceOf(address who) public view returns (uint256);
-    function transfer(address to, uint256 value) public returns (bool);
-    event Transfer(address indexed from, address indexed to, uint256 value);
+    function transfer(address to, uint value);
+    function transfer(address to, uint value, bytes data);
+    event Transfer(address indexed from, address indexed to, uint256 value, bytes data);
 }
 
-contract ERC20 is ERC20Basic {
+contract ERC223ReceivingContract { 
+    /** @dev Standard ERC223 function that will handle incoming token transfers.
+    *
+    * @param _from  Token sender address.
+    * @param _value Amount of tokens.
+    * @param _data  Transaction metadata.
+    */
+    function tokenFallback(address _from, uint _value, bytes _data);
+}
+
+contract ERC20 is ERC223Basic {
     function allowance(address owner, address spender) public view returns (uint256);
     function transferFrom(address from, address to, uint256 value) public returns (bool);
     function approve(address spender, uint256 value) public returns (bool);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
-contract BasicToken is ERC20Basic {
+contract BasicToken is ERC223Basic {
     using SafeMath for uint256;
 
     mapping(address => uint256) balances;
     /**
-    * @dev transfer token for a specified address
-    * @param _to The address to transfer to.
-    * @param _value The amount to be transferred.
-    */
-    function transfer(address _to, uint256 _value) public returns (bool) {
+     * @dev Transfer the specified amount of tokens to the specified address.
+     *      Invokes the `tokenFallback` function if the recipient is a contract.
+     *      The token transfer fails if the recipient is a contract
+     *      but does not implement the `tokenFallback` function
+     *      or the fallback function to receive funds.
+     *
+     * @param _to    Receiver address.
+     * @param _value Amount of tokens that will be transferred.
+     * @param _data  Transaction metadata.
+     */
+    function transfer(address _to, uint _value, bytes _data) {
+        // Standard function transfer similar to ERC20 transfer with no _data .
+        // Added due to backwards compatibility reasons .
+        uint codeLength;
+
+        assembly {
+            // Retrieve the size of the code on target address, this needs assembly .
+            codeLength := extcodesize(_to)
+        }
+
         balances[msg.sender] = balances[msg.sender].sub(_value);
         balances[_to] = balances[_to].add(_value);
-        emit Transfer(msg.sender, _to, _value);
-        return true;
+        if(codeLength>0) {
+            ERC223ReceivingContract receiver = ERC223ReceivingContract(_to);
+            receiver.tokenFallback(msg.sender, _value, _data);
+        }
+        emit Transfer(msg.sender, _to, _value, _data);
     }
+    
     /**
-    * @dev Gets the balance of the specified address.
-    * @param _owner The address to query the the balance of.
-    * @return An uint256 representing the amount owned by the passed address.
-    */
-    function balanceOf(address _owner) public view returns (uint256 balance) {
+     * @dev Transfer the specified amount of tokens to the specified address.
+     *      This function works the same with the previous one
+     *      but doesn't contain `_data` param.
+     *      Added due to backwards compatibility reasons.
+     *
+     * @param _to    Receiver address.
+     * @param _value Amount of tokens that will be transferred.
+     */
+    function transfer(address _to, uint _value) {
+        uint codeLength;
+        bytes memory empty;
+
+        assembly {
+            // Retrieve the size of the code on target address, this needs assembly .
+            codeLength := extcodesize(_to)
+        }
+
+        balances[msg.sender] = balances[msg.sender].sub(_value);
+        balances[_to] = balances[_to].add(_value);
+        if(codeLength>0) {
+            ERC223ReceivingContract receiver = ERC223ReceivingContract(_to);
+            receiver.tokenFallback(msg.sender, _value, empty);
+        }
+        emit Transfer(msg.sender, _to, _value, empty);
+    }
+
+    
+    /**
+     * @dev Returns balance of the `_owner`.
+     *
+     * @param _owner   The address whose balance will be returned.
+     * @return balance Balance of the `_owner`.
+     */
+    function balanceOf(address _owner) constant returns (uint balance) {
         return balances[_owner];
     }
 }
