@@ -21,14 +21,23 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     uint256 public teamCap;
     uint256 public airdropCap;
 
+    /**
+    * @dev function: constructor
+    * @param _startBlock: at what block number, the crowdsale should begin
+    * @param _endBlock: at what block number, the crowdsale should stop
+    * @param _fixRate: how many tokens gives 1 ether
+    * @param _cap: crowdsale capitalization in ether
+    * @param wallet: address which collects received ether
+     */
     constructor(
         uint256 _startBlock, uint256 _endBlock, 
-        uint256 _fixRate, address wallet
+        uint256 _fixRate, uint256 _cap,
+        address wallet
     )
         public 
         Crowdsale(_startBlock, _endBlock, _fixRate, wallet)
         WhitelistedCrowdsale()
-        CappedCrowdsale(38350 ether)
+        CappedCrowdsale(_cap * (1 ether))
     {
         stage = stages.pICO;
 
@@ -42,23 +51,41 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
         emit PreCrowdsaleStarted();
     }
 
-    /** function override */
+    /**
+    * @dev overriden function
+    * @notice creates a mintable compatible token
+    * @return the custom token
+    */
     function createTokenContract() internal returns (MintableToken) {
         return new KYLToken();
     }
 
+    /**
+    * @dev overriden function
+    * @notice owner must be the caller, stage should be preICO
+    * @notice adds an address to the early investors whitelist
+    */
     function addToWhitelist(address buyer) public onlyOwner{
         require(stage == stages.pICO, "Current stage is not preICO");
         super.addToWhitelist(buyer);
     }
 
+    /**
+    * @notice owner must be the caller, state should be paused
+    * @notice sets a custom rate
+    */
     function setRate(uint256 _rate) public whenPaused onlyOwner{
         require(_rate > 0, "Rate is zero");
         rate = _rate;
         emit RateChanged(rate);
     }
 
-    /** function override */
+    /**
+    * @dev overriden function
+    * @notice crowdsale state should be unpaused
+    * @notice a investor can call this function to buy tokens
+    * @param who: the address where tokens are forwarded
+    */
     function buyTokens(address who) public whenNotPaused payable{
         require(who != 0x0, "Invalid address");
         require(super.validPurchase(), "Invalid purchase");
@@ -82,7 +109,12 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
         super.forwardFunds();
     }
 
-    /* handle external buyers */
+    /**
+    * @notice crowdsale state should be unpaused; only callable during preICO, ICO
+    * @notice owner can use this function to handle external token purchases
+    * @param who: the address where tokens are forwarded
+    * @param tokens: the amount of tokens to be forwarded in KYL's
+    */
     function mintTo(address who, uint256 tokens) public onlyOwner{
         require(who != 0x0, "Invalid address");
         require(tokens > 0, "Invalid token amount");
@@ -103,7 +135,12 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
         emit ExternalPurchase(who, total);
     }
 
-    /* airdrop tokens */
+    /**
+    * @notice callable as long as there are enough tokens to be airdropped
+    * @notice owner can use this function to handle token airdrops
+    * @param who: the address where tokens are forwarded
+    * @param tokens: the amount of tokens to be forwarded in KYL's
+    */
     function airDrop(address who, uint256 tokens) public onlyOwner{
         require(who != 0x0, "Invalid address");
         require(tokens > 0, "Invalid token amount");
@@ -115,7 +152,12 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
         emit AirDroppedTokens(who, tokens);
     }
 
-    /* finalize pICO, goto next stage */
+    /**
+    * @notice callable when state is not paused, only by owner
+    * @notice ends preICO, if SC is not met, remaining tokens are added to HC
+    * @notice sets crowdsale state to unpaused
+    * @param _rate: at what rate public sale should start
+     */
     function endPreICO(uint256 _rate) public onlyOwner whenPaused{
         require(stage == stages.pICO, "Current stage is not preICO");
 
@@ -127,35 +169,48 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
         emit CrowdsaleStarted();
     }
 
-    /* finalize public crowdsale */
+    /**
+    * @notice callable when state is paused, only by owner, after end block has been reached
+    * @notice ends crowdsale, if HC is not met, remaining tokens are burned
+    * @notice sets token state to unpaused
+     */
     function finalize() public onlyOwner whenPaused{
-        require(block.number >= endBlock, "EndBlock not reached yet");
+        require(hasEnded(), "EndBlock not reached yet");
         
         if(hardCap > 0){
-            token.mint(msg.sender, hardCap);        
-            KYLToken(token).burn(hardCap);
+            token.mint(0x0, hardCap);
+            cap = 0;
         }
 
         KYLToken(token).unpause();
         emit CrowdsaleFinished();
     }
 
+    /**
+    * @notice freeze tokens, in case an address is compromised
+    */
     function freezeTokens(address who) public onlyOwner{
         KYLToken(token).freeze(who);
     }
 
+    /**
+    * @notice unfreeze tokens
+    */
     function unfreezeTokens(address who) public onlyOwner{
         KYLToken(token).unfreeze(who);
     }
 
-    /* partial liberate foundation tokens */
+    /**
+    * @notice callable after crowdsale has ended only by owner
+    * @notice mint tokens for foundation
+    */
     function teamMint(uint256 tokens) public onlyOwner{
         require(tokens > 0, "Token amount cannot be 0");
         require(teamCap.sub(tokens) >= 0, "Token amount exceeds team cap");
         require(hasEnded(), "Crowdsale has not finished");
 
         teamCap = teamCap.sub(tokens);
-        token.mint(wallet, tokens);
+        token.mint(wallet, tokens.mul(1 ether));
 
         emit TeamMintedTokens(tokens);
     }

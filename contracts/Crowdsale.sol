@@ -31,7 +31,7 @@ contract Crowdsale {
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
     constructor (uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _wallet) public {
-        //require(_startBlock >= block.number, "Actual Block is higher");
+        require(_startBlock >= block.number);
         require(_endBlock >= _startBlock);
         require(_rate > 0);
         require(_wallet != 0x0);
