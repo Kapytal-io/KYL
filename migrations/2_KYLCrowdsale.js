@@ -7,5 +7,5 @@ module.exports = function(deployer){
     const cap = 38350;
     const wallet = "0x352039187ea40cecde81789b8657f09a4f9031f8";
     
-    deployer.deploy(KYLCrowdsale, startBlock, endBlock, fixRate, wallet);
+    deployer.deploy(KYLCrowdsale, startBlock, endBlock, fixRate, cap, wallet);
 }
