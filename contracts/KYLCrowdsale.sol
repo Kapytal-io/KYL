@@ -214,4 +214,18 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
 
         emit TeamMintedTokens(tokens);
     }
+	/**
+	* @dev brings AIO data view
+	*/
+    function getData() public view returns(uint[]){
+	    uint[] memory data = new uint[](7);
+		data[0] = cap;
+		data[1] = weiRaised;
+		data[2] = rate;
+		data[3] = softCap;
+		data[4] = hardCap;
+		data[5] = teamCap;
+		data[6] = airdropCap;
+		return data;
+	}
 }
