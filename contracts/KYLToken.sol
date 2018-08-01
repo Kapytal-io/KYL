@@ -232,4 +232,5 @@ contract KYLToken is FreezableToken, BurnableToken, PausableToken, MintableToken
     string public constant symbol = "KYL";
     string public constant name = "Kapytal Token";
     uint8 public constant decimals = 18;
+    uint256 public totalSupply = 100000000*(10**18);
 }

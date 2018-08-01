@@ -66,7 +66,7 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     * @notice adds an address to the early investors whitelist
     */
     function addToWhitelist(address buyer) public onlyOwner{
-        require(stage == stages.pICO, "Current stage is not preICO");
+        require(stage == stages.pICO);
         super.addToWhitelist(buyer);
     }
 
@@ -75,7 +75,7 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     * @notice sets a custom rate
     */
     function setRate(uint256 _rate) public whenPaused onlyOwner{
-        require(_rate > 0, "Rate is zero");
+        require(_rate > 0);
         rate = _rate;
         emit RateChanged(rate);
     }
@@ -87,18 +87,18 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     * @param who the address where tokens are forwarded
     */
     function buyTokens(address who) public whenNotPaused payable{
-        require(who != 0x0, "Invalid address");
-        require(super.validPurchase(), "Invalid purchase");
+        require(who != 0x0);
+        require(super.validPurchase());
 
         uint256 value = msg.value;
         uint256 tokens = value.mul(rate);
 
         if(stage == stages.pICO){
-            require(super.isWhitelisted(who), "Address not whitelisted");
-            require(softCap.sub(tokens.div(1 ether)) >= 0, "Tokens exceed softcap");        
+            require(super.isWhitelisted(who));
+            require(softCap.sub(tokens.div(1 ether)) >= 0);        
             softCap = softCap.sub(tokens.div(1 ether));
         }else if(stage == stages.ICO){
-            require(hardCap.sub(tokens.div(1 ether)) >= 0, "Tokens exceed hardcap");
+            require(hardCap.sub(tokens.div(1 ether)) >= 0);
             hardCap = hardCap.sub(tokens.div(1 ether));
         }
         
@@ -116,17 +116,17 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     * @param tokens the amount of tokens to be forwarded in KYL's
     */
     function mintTo(address who, uint256 tokens) public onlyOwner{
-        require(who != 0x0, "Invalid address");
-        require(tokens > 0, "Invalid token amount");
+        require(who != 0x0);
+        require(tokens > 0);
 
         uint256 total = tokens.mul(1 ether);
         uint256 value = total.div(rate);
 
         if(stage == stages.pICO){
-            require(softCap.sub(tokens) >= 0, "Tokens exceed softcap");
+            require(softCap.sub(tokens) >= 0);
             softCap = softCap.sub(tokens);
         }else if(stage == stages.ICO){
-            require(hardCap.sub(tokens) >= 0, "Tokens exceed hardcap");
+            require(hardCap.sub(tokens) >= 0);
             hardCap = hardCap.sub(tokens);
         }
 
@@ -142,9 +142,9 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     * @param tokens the amount of tokens to be forwarded in KYL's
     */
     function airDrop(address who, uint256 tokens) public onlyOwner{
-        require(who != 0x0, "Invalid address");
-        require(tokens > 0, "Invalid token amount");
-        require(airdropCap.sub(tokens) >= 0, "Amount exceeds airdrop cap");
+        require(who != 0x0);
+        require(tokens > 0);
+        require(airdropCap.sub(tokens) >= 0);
 
         airdropCap = airdropCap.sub(tokens);
 
@@ -159,10 +159,11 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     * @param _rate at what rate public sale should start
      */
     function endPreICO(uint256 _rate) public onlyOwner whenPaused{
-        require(stage == stages.pICO, "Current stage is not preICO");
+        require(stage == stages.pICO);
 
         stage = stages.ICO;
         hardCap = hardCap.add(softCap);
+        softCap = 0;
         rate = _rate;
 
         super.unpause();
@@ -175,7 +176,7 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     * @notice sets token state to unpaused
      */
     function finalize() public onlyOwner whenPaused{
-        require(hasEnded(), "EndBlock not reached yet");
+        require(hasEnded());
         
         if(hardCap > 0){
             token.mint(0x0, hardCap);
@@ -205,27 +206,28 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     * @notice mint tokens for foundation
     */
     function teamMint(uint256 tokens) public onlyOwner{
-        require(tokens > 0, "Token amount cannot be 0");
-        require(teamCap.sub(tokens) >= 0, "Token amount exceeds team cap");
-        require(hasEnded(), "Crowdsale has not finished");
+        require(tokens > 0);
+        require(teamCap.sub(tokens) >= 0);
+        require(hasEnded());
 
         teamCap = teamCap.sub(tokens);
         token.mint(wallet, tokens.mul(1 ether));
 
         emit TeamMintedTokens(tokens);
     }
+    
 	/**
 	* @dev brings AIO data view
 	*/
     function getData() public view returns(uint[]){
-	    uint[] memory data = new uint[](7);
-		data[0] = cap;
-		data[1] = weiRaised;
-		data[2] = rate;
-		data[3] = softCap;
-		data[4] = hardCap;
-		data[5] = teamCap;
-		data[6] = airdropCap;
-		return data;
-	}
+        uint[] memory data = new uint[](7);
+        data[0] = cap;
+        data[1] = weiRaised;
+        data[2] = rate;
+        data[3] = softCap;
+        data[4] = hardCap;
+        data[5] = teamCap;
+        data[6] = airdropCap;
+        return data;
+    }
 }
