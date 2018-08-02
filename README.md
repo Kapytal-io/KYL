@@ -1,22 +1,183 @@
 # KYL
 Repository for the development, documentation, and debugging of Kapytal Exchange Token (KYL coin).
-## Overview
-The token created on this repo make used the protocol 20, that is a standar of Open Zeppelin to built a contract on Solidity to manage tokens on Ethereum Net. Also in the same repo there are some contracts that define the crowdsale for the next pre ICO and ICO by [Kapytal](http://kapytal.io)
 
-The contracts of crowdsale does not follow any standar, but it try to be congruent of many others process of crowdsale.
+## Overview
+The token created on this repo makes use of the standard-protocol ERC-20 which is used by most of the industries. We make use of Open Zeppelin's pre-built-audited smart contracts on Solidity to manage tokens on the Ethereum network. Also, here in the same repo there are some contracts that define the crowdsale logic for the PreICO and ICO by being made [Kapytal](http://kapytal.io)
+
+The crowdsale contracts does not follow any standard, they provide a simple set of functions that made crowdsale's administration easier. They're also congruent with Open Zeppelin's of many others process of crowdsale.
 
 ## Technologies used
-
-The contracts were created on solidity version 0.4.22 that is a stably version sugered for Open Zeppelin for develop token proyect, to facility be checked for some others and be rigth to the standar.
-
-Also implement some archives in JavaScript to preconfigure the crowdsale deploy contract, be necesary for manage the acount that goint to receive the capital coin in the process.
+The contracts were created using solidity compiler version 0.4.22 which is one of the stable versions. 
+For running the automated unitary tests, truffle suite is needed along with npm and NodeJS.
+Truffle tests were written using NodeJS enviroinment.
 
 ## Requirements
+The tests are intended to run on a Unix terminal installing the following software
 
-There are to types requirements, in the case when we only prove the contracts as localhost or when we whant to deploy at mainnet or testnet. In both cases, we previously need to install any of the next browsers like [Firefox](https://www.mozilla.org/es-MX/firefox/new/),[Chrome](https://www.google.com.mx/chrome/?brand=CHBD&gclid=CjwKCAjwtIXbBRBhEiwAWV-5ntiyem_D4XVkYgG1mjIpJiBvjTsPj4I6qvQOGhimI_dQ-qONkuFCfBoC3BUQAvD_BwE&gclsrc=aw.ds&dclid=CLD63bvxzNwCFYnbwAodETIJmA), [Opera](https://www.opera.com/es) or [Brave](https://brave.com) and that why we also need [Metamask](https://metamask.io) for run the proves.
+npm (latest)
+truffle @4.1.13 (solc@0.422)
+ganache-cli  6.1.66
 
 ## Installation
+npm is distributed with Node.js- which means that when you download Node.js, you automatically get npm installed on your computer and you can get it on [npm](https://www.npmjs.com/package/npm)
+
+Once you have installed the npm distribution, the next step is to install the remaining packages, using the following command lines:
+
+```
+$ npm install -g truffle
+$ npm install -g ganache-cli
+```
+
 ## Unit Testing
-## Development
+For unit testing, we make use of truffle suite which includes an automated framework for running local and unit tests on a blockchain. The blockchain used is ganache-cli, which is a local client to easily deploy and run Ethereum contracts.
+
+For running the unitary tests under truffle-suite, once the repository has been cloned, you must put the following commands:
+```
+$ ganache-cli
+```
+This line runs the `ganache client` to support the local blockchain, where in the next steps the contract is going to be deploy and service the functions for the test.
+For further information about gasnache-cli funciotionslity please reffered to the following link: https://github.com/trufflesuite/ganache-cli
+
+```
+$ truffle compile
+$ truffle migrate
+```
+
+At this point the tool test is ready and the final step is to run the next line which is going to test the crowdsale contract which makes used the token. 
+
+```
+$ truffle test
+```
+
+For further information about gasnache-cli funciotionslity please reffered to the following link: https://github.com/trufflesuite/truffle
+
+Every checked on the result list test is a function made on JavaScript that was thought for correct output and this facilities the checked process.
+
+The result in terminal shuld looks like following figure:
+![alt text](https://github.com/Kapytal-io/KYL/tree/master/images/chekedList.png "Result list check")
+
+
+## API Description (Functions)
+
+### Business Rules
+* CFS: Curent crowdsale stage should be Pre ICO
+* RRA: Newer rate should be major than zero
+* ADR: Address should be different than 0x0
+* CRU: Current block should be minor than ending block
+* CBU: Current block should be major than ending block
+* QTY: Token quantity should be major than zero
+* TOK: There should enough remaining tokens after subtracting requested tokens from token cap
+
+1. Function: Constructor.
+Contract: self
+Objective: Upload the contract to the ethereum blockchain, starting crowdsale on the way
+Conditions: Starting block shold be major than curent block and ending block should be major than actual block
+Conditions: Have an ethereum account
+Lifespan: At call
+Caller: Anyone
+State: None
+Cost: 100 usd @ 60Gwei
+
+2. Function transferOwnership
+Contract: Ownable
+Objective: An owner can transfer ownership to another ethereum account.
+Conditions: Address cannot be zero
+Lifespan: Contract’s
+Caller: Owner
+State: None
+Cost: 1.11 usd @ 60 Gwei
+ 
+3. Function: pause / unpause
+Contract: Pausable
+Objective: Certain functions may be affected by this function effects. Pausing the crowdsale gives the Owner the chance to: change the exchange rate, finalize a crowdsale’s stage, start a new stage, pause token sales, among other administrative functions.
+Conditions: Crowdsale state should be paused / unpaused depending on function's calls
+Lifespan: Contract's
+Caller: Owner
+State: Paused / unpaused
+Cost: 1.08 usd @ 60Gwei
+ 
+4. Function: addToWhitelist
+Contract: WhitelistedCrowdsale, KYLCrowdsale
+Objective: During the Pre ICO, only the investors within the list are able to buy tokens. Owner can whitelist investor’s addresses that fulfill business requirements by calling this function.
+Conditions: CFS
+Lifespan: Pre ICO
+Caller: Owner
+State: None
+Cost: 1.70 usd @ 60Gwei
+ 
+5. Function setRate
+Objective: As the crowdsale progresses, owner should be able to change exchange rate.
+Conditions: RRA
+Lifespan: Contract's
+Caller: Owner
+State: Paused
+Cost: 1.08 usd @ 60Gwei
+
+6. unction: buyTokens
+Objective: Buy tokens.
+Conditions: ADR, CRU, token quantity should be minor than softcap or hardcap, depending on current stage.
+Lifespan: As long as current block is minor than ending block.
+Caller: Anyone
+State: Not paused
+Cost: Not calculated
+ 
+7. Function mintTo
+Objective: Handle external buyers, making owner able to mint tokens to other ethereum addresses.
+Conditions: ADR, QTY.
+Lifespan: As long as soft cap or hard cap isn’t reached
+Caller: Owner
+State: Not paused
+Cost: 3.68 usd @ 60Gwei
+ 
+8. Function airdrop
+Objective: Given a determined ethereum address, owner is able to air drop promotional tokens.
+Conditions: ADR, QTY, TOK.
+Lifespan: As long as there are enough promotional tokens left.
+Caller: Owner
+State: None
+Cost: 1.70 usd @ 60Gwei
+
+9. Function endPreICO:
+Objective: Finalize PreICO, starts ICO
+Conditions: CFS
+Lifespan: PreICO
+Caller: Owner
+State: Paused
+Cost: 2.30 usd @ 60Gwei
+ 
+10. Function finalize:
+Objective: Finalize ICO
+Conditions: CBU
+Lifespan: ICO
+Caller: Owner
+State: Paused
+ 
+11. Function: freezeTokens
+Objective: Given a compromised ethereum account, Owner can block address's token transfers
+Conditions: Address is unfreezed
+LifeSpan: Contract’s
+Caller: Owner
+State: None
+ 
+12. Function: unfreezeTokens
+Objective: Unfreeze an account that has KYL Tokens on it
+Conditions: Address is freezed
+LifeSpan: Contract’s
+Caller: Owner
+State: None
+ 
+13. Function teamMInt
+Objective: Mint tokens for team members after crowdsale has ended
+Conditions: QTY, TOK
+Lifespan: After Crowdsale
+Caller: Owner
+State: None
+
 ## Project status
-## Licence
+For now the smart contracts that be call: Crowdsale, KYLCrowdsale.sol, KYLToken.sol, Migrations.sol and
+SafeMath.sol. are finished
+[You can see the how to working](https://remix.ethereum.org/#optimize=true&version=soljson-v0.4.24+commit.e67f0147.js “REMIX”)
+For the smart contrac call “Crowdsale” in this moment the cost of having it in the Rupsten is being checked.
+We are still waiting for the contact of the back-end developers team for to be able to establish how the contracts will be connected and interact.
+
+## License
