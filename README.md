@@ -54,7 +54,7 @@ For further information about gasnache-cli funciotionslity please reffered to th
 Every checked on the result list test is a function made on JavaScript that was thought for correct output and this facilities the checked process.
 
 The result in terminal shuld looks like following figure:
-![alt text](https://github.com/Kapytal-io/KYL/tree/master/images/chekedList.png "Result list check")
+![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/chekedList.png "Result list check")
 
 
 ## API Description (Functions)
