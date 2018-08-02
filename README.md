@@ -36,29 +36,22 @@ For running the unitary tests under truffle-suite, once the repository has been 
 $ ganache-cli
 ```
 This line runs the `ganache client` to support the local blockchain, where in the next steps the contract is going to be deploy and service the functions for the test.
-For further information about gasnache-cli funciotionslity please reffered to the following link: https://github.com/trufflesuite/ganache-cli
+For further information about ganache-cli functionality please refer to the following link: https://github.com/trufflesuite/ganache-cli
 
 ```
 $ truffle compile
 $ truffle migrate
 ```
 
-At this point the tool test is ready and the final step is to run the next line which is going to test the crowdsale contract which makes used the token. 
-
+At this point we’re almost done the final step is run the following command which is going to run crowdsale’s automated tests showing some feature on the run.
 ```
 $ truffle test
 ```
-
-For further information about gasnache-cli funciotionslity please reffered to the following link: https://github.com/trufflesuite/truffle
-
-Every checked on the result list test is a function made on JavaScript that was thought for correct output and this facilities the checked process.
-
-The result in terminal shuld looks like following figure:
+For further information about ganache-cli functionality please refer to the following link: https://github.com/trufflesuite/truffle
+Every check on the output list test states that a function has been executed successfully. Each unit test is made on the top of JavaScript, meanwhile contract’s functions are called on the back.
+After all tests have been passed, your output terminal should look like the following figure:
 ![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/chekedList.png "Result list check")
-
-
-## API Description (Functions)
-
+## API Description (Functions and Gas Costs)
 ### Business Rules
 * CFS: Curent crowdsale stage should be Pre ICO
 * RRA: Newer rate should be major than zero
