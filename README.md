@@ -20,7 +20,7 @@ Configurable build pipeline with support for custom build processes.
 Scriptable deployment & migrations framework.
 
 Ganache is a personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.
-![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/truffle.png)
+<a href="#">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/truffle.png)</a>
 
 ## Requirements
 The tests are intended to run on a Unix terminal installing the following software
@@ -66,7 +66,7 @@ $ truffle test
 For further information about ganache-cli functionality please refer to the following link: https://github.com/trufflesuite/truffle
 Every check on the output list test states that a function has been executed successfully. Each unit test is made on the top of JavaScript, meanwhile contract’s functions are called on the back.
 After all tests have been passed, your output terminal should look like the following figure:
-![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/chekedList.png "Result list check")
+<a href="#"![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/chekedList.png "Result list check")</a>
 ## API Description (Functions and Gas Costs)
 ### Business Rules
 * CFS: Curent crowdsale stage should be Pre ICO
@@ -193,4 +193,4 @@ For the smart contrac call “Crowdsale” in this moment the cost of having it 
 We are still waiting for the contact of the back-end developers team for to be able to establish how the contracts will be connected and interact.
 
 ## License
-![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/logo.png)
+<a href="#">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/logo.png)</a>
