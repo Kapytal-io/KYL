@@ -56,7 +56,7 @@ For running the unitary tests under truffle-suite, once the repository has been 
 $ ganache-cli
 ```
 This line runs the `ganache client` to support the local blockchain, where in the next steps the contract is going to be deploy and service the functions for the test.
-For further information about ganache-cli functionality please refer to the following link: <a href="https://github.com/trufflesuite/ganache-cli"target="_blank">![alt text](https://raw.githubusercontent.com/trufflesuite/ganache-cli/ganache-cli/resources/icons/ganache-cli-128x128.png)</a>
+For further information about ganache-cli functionality please refer to the following link: <a href="https://github.com/trufflesuite/ganache-cli">![alt text](https://raw.githubusercontent.com/trufflesuite/ganache-cli/ganache-cli/resources/icons/ganache-cli-128x128.png)</a>
 
 ```
 $ truffle compile
