@@ -187,8 +187,7 @@ State: None
 
 ## Project status
 For now the smart contracts that be call: Crowdsale, KYLCrowdsale.sol, KYLToken.sol, Migrations.sol and
-SafeMath.sol. are finished
-[You can see the how to working](https://remix.ethereum.org/#optimize=true&version=soljson-v0.4.24+commit.e67f0147.js “REMIX”)
+SafeMath.sol. are finished.
 For the smart contrac call “Crowdsale” in this moment the cost of having it in the Rupsten is being checked.
 We are still waiting for the contact of the back-end developers team for to be able to establish how the contracts will be connected and interact.
 You can test the functions here:
