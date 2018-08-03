@@ -182,7 +182,7 @@ Lifespan: After Crowdsale
 Caller: Owner
 State: None
 You can test the functions here:
-![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/Captura.png)
+![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/Captura.PNG)
 
 
 ## Project status
