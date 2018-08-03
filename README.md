@@ -1,4 +1,4 @@
-![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/logo.png)
+![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/portada.png)
 # KYL
 Repository for the development, documentation, and debugging of Kapytal Exchange Token (KYL coin).
 
@@ -190,3 +190,4 @@ For the smart contrac call “Crowdsale” in this moment the cost of having it 
 We are still waiting for the contact of the back-end developers team for to be able to establish how the contracts will be connected and interact.
 
 ## License
+![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/portada.png)
