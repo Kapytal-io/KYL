@@ -182,7 +182,7 @@ Lifespan: After Crowdsale
 Caller: Owner
 State: None
 You can test the functions here:
-<a href="https://code.i-harness.com/es/q/841441">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/Captura.PNG)</a>
+<a href="https://remix.ethereum.org/#optimize=true&version=soljson-v0.4.24+commit.e67f0147.js">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/Captura.PNG)</a>
 
 
 ## Project status
