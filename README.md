@@ -181,6 +181,9 @@ Conditions: QTY, TOK
 Lifespan: After Crowdsale
 Caller: Owner
 State: None
+You can test the functions here:
+![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/Captura.png)
+
 
 ## Project status
 For now the smart contracts that be call: Crowdsale, KYLCrowdsale.sol, KYLToken.sol, Migrations.sol and
