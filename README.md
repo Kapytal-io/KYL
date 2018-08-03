@@ -25,9 +25,11 @@ Once you have installed the npm distribution, the next step is to install the re
 
 ```
 $ npm install -g truffle
+
+
 $ npm install -g ganache-cli
 ```
-
+Ganache is a personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.
 ## Unit Testing
 For unit testing, we make use of truffle suite which includes an automated framework for running local and unit tests on a blockchain. The blockchain used is ganache-cli, which is a local client to easily deploy and run Ethereum contracts.
 
