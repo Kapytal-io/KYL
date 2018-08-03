@@ -67,7 +67,7 @@ $ truffle test
 For further information about ganache-cli functionality please refer to the following link: https://github.com/trufflesuite/truffle
 Every check on the output list test states that a function has been executed successfully. Each unit test is made on the top of JavaScript, meanwhile contract’s functions are called on the back.
 After all tests have been passed, your output terminal should look like the following figure:
-<a href="#"![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/chekedList.png "Result list check")</a>
+<a href="#">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/chekedList.png "Result list check")</a>
 ## API Description (Functions and Gas Costs)
 ### Business Rules
 * CFS: Curent crowdsale stage should be Pre ICO
