@@ -182,8 +182,7 @@ Conditions: QTY, TOK
 Lifespan: After Crowdsale
 Caller: Owner
 State: None
-You can test the functions here:
-<a href="https://remix.ethereum.org/#optimize=true&version=soljson-v0.4.24+commit.e67f0147.js">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/Captura.PNG)</a>
+
 
 
 ## Project status
@@ -192,6 +191,8 @@ SafeMath.sol. are finished
 [You can see the how to working](https://remix.ethereum.org/#optimize=true&version=soljson-v0.4.24+commit.e67f0147.js “REMIX”)
 For the smart contrac call “Crowdsale” in this moment the cost of having it in the Rupsten is being checked.
 We are still waiting for the contact of the back-end developers team for to be able to establish how the contracts will be connected and interact.
+You can test the functions here:
+<a href="https://remix.ethereum.org/#optimize=true&version=soljson-v0.4.24+commit.e67f0147.js">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/Captura.PNG)</a>
 
 ## License
 <a href="#">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/logo.png)</a>
