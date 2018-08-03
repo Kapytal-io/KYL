@@ -11,6 +11,15 @@ The contracts were created using solidity compiler version 0.4.22 which is one o
 For running the automated unitary tests, truffle suite is needed along with npm and NodeJS.
 Truffle tests were written using NodeJS enviroinment.
 
+Truffle is a development environment, testing framework and asset pipeline for Ethereum, aiming to make life as an Ethereum developer easier. With Truffle, you get:
+
+Built-in smart contract compilation, linking, deployment and binary management.
+Automated contract testing with Mocha and Chai.
+Configurable build pipeline with support for custom build processes.
+Scriptable deployment & migrations framework.
+
+Ganache is a personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.
+
 ## Requirements
 The tests are intended to run on a Unix terminal installing the following software
 
@@ -23,12 +32,7 @@ npm is distributed with Node.js- which means that when you download Node.js, you
 
 Once you have installed the npm distribution, the next step is to install the remaining packages, using the following command lines:
 
-Truffle is a development environment, testing framework and asset pipeline for Ethereum, aiming to make life as an Ethereum developer easier. With Truffle, you get:
 
-Built-in smart contract compilation, linking, deployment and binary management.
-Automated contract testing with Mocha and Chai.
-Configurable build pipeline with support for custom build processes.
-Scriptable deployment & migrations framework.
 
 ```
 $ npm install -g truffle
@@ -36,7 +40,7 @@ $ npm install -g truffle
 
 $ npm install -g ganache-cli
 ```
-Ganache is a personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.
+
 
 ## Unit Testing
 For unit testing, we make use of truffle suite which includes an automated framework for running local and unit tests on a blockchain. The blockchain used is ganache-cli, which is a local client to easily deploy and run Ethereum contracts.
