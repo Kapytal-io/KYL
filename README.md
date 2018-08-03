@@ -19,6 +19,7 @@ Configurable build pipeline with support for custom build processes.
 Scriptable deployment & migrations framework.
 
 Ganache is a personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.
+![alt text](https://cdn-images-1.medium.com/max/1600/0*VR91f-cIET7_9_hT.gif)
 
 ## Requirements
 The tests are intended to run on a Unix terminal installing the following software
