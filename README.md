@@ -1,6 +1,13 @@
 <a href="#">![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/portada.png)</a>
 # KYL
+<div id="prueba">
 Repository for the development, documentation, and debugging of Kapytal Exchange Token (KYL coin).
+ </div>
+ <style>
+ #prueba{
+ background:blue;
+ }
+ </style>
 
 ## Overview
 The token created on this repo makes use of the standard-protocol ERC-20 which is used by most of the industries. We make use of Open Zeppelin's pre-built-audited smart contracts on Solidity to manage tokens on the Ethereum network. Also, here in the same repo there are some contracts that define the crowdsale logic for the PreICO and ICO by being made [Kapytal](http://kapytal.io)
