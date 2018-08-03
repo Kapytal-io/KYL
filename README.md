@@ -1,3 +1,4 @@
+![alt text](https://github.com/Kapytal-io/KYL/blob/master/images/portada.png)
 # KYL
 Repository for the development, documentation, and debugging of Kapytal Exchange Token (KYL coin).
 
