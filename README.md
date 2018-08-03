@@ -25,10 +25,10 @@ Ganache is a personal blockchain for Ethereum development you can use to deploy 
 ## Requirements
 The tests are intended to run on a Unix terminal installing the following software
 
-npm (latest)
-truffle @4.1.13 (solc@0.422)
-ganache-cli  6.1.66
-Metamask for your browser
+* npm (latest)
+* truffle @4.1.13 (solc@0.422)
+* ganache-cli  6.1.66
+* Metamask for your browser
 
 ## Installation
 npm is distributed with Node.js- which means that when you download Node.js, you automatically get npm installed on your computer and you can get it on [npm](https://www.npmjs.com/package/npm)
