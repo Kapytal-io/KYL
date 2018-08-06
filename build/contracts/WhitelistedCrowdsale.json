@@ -212,9 +212,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.22;\n\nimport './KYLToken.sol';\n\ncontract Crowdsale {\n    using SafeMath for uint256;       \n\n    // The token being sold\n    MintableToken public token;\n\n    // start and end block where investments are allowed (both inclusive)\n    uint256 public startBlock;\n    uint256 public endBlock;\n\n    // address where funds are collected\n    address public wallet;\n\n    // how many token units a buyer gets per wei\n    uint256 public rate;\n\n    // amount of raised money in wei\n    uint256 public weiRaised;\n\n    /**\n    * event for token purchase logging\n    * @param purchaser who paid for the tokens\n    * @param beneficiary who got the tokens\n    * @param value weis paid for purchase\n    * @param amount amount of tokens purchased\n    */\n    event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);\n\n    constructor (uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _wallet) public {\n        require(_startBlock >= block.number);\n        require(_endBlock >= _startBlock);\n        require(_rate > 0);\n        require(_wallet != 0x0);\n\n        token = createTokenContract();\n        startBlock = _startBlock;\n        endBlock = _endBlock;\n        rate = _rate;\n        wallet = _wallet;\n    }\n\n    // creates the token to be sold.\n    // override this method to have crowdsale of a specific mintable token.\n    function createTokenContract() internal returns (MintableToken) {\n        return new MintableToken();\n    }\n\n    // fallback function can be used to buy tokens\n    function () public payable {\n        buyTokens(msg.sender);\n    }\n\n    // low level token purchase function\n    function buyTokens(address beneficiary) public payable {\n        require(beneficiary != 0x0);\n        require(validPurchase());\n\n        uint256 weiAmount = msg.value;\n\n        // calculate token amount to be created\n        uint256 tokens = weiAmount.mul(rate);\n        // update state\n        weiRaised = weiRaised.add(weiAmount);\n\n        token.mint(beneficiary, tokens);\n        emit TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);\n        forwardFunds();\n    }\n\n    // send ether to the fund collection wallet\n    // override to create custom fund forwarding mechanisms\n    function forwardFunds() internal {\n        wallet.transfer(msg.value);\n    }\n\n    // @return true if the transaction can buy tokens\n    function validPurchase() internal view returns (bool) {\n        uint256 current = block.number;\n        bool withinPeriod = current >= startBlock && current <= endBlock;\n        bool nonZeroPurchase = msg.value != 0;\n        return withinPeriod && nonZeroPurchase;\n    }\n\n    // @return true if crowdsale event has ended\n    function hasEnded() public view returns (bool) {\n        return block.number > endBlock;\n    }\n}\n\ncontract WhitelistedCrowdsale is Crowdsale, Ownable {\n    mapping (address => bool) whitelist;\n\n    function addToWhitelist(address buyer) public onlyOwner {\n        require(buyer != 0x0);\n        whitelist[buyer] = true;\n    }\n\n    function isWhitelisted(address buyer) public view returns (bool) {\n        return whitelist[buyer];\n    }\n\n    function validPurchase() internal view returns (bool) {\n        bool isValid = (!hasEnded()) && isWhitelisted(msg.sender);\n        return super.validPurchase() || isValid;\n    }\n}\n\ncontract CappedCrowdsale is Crowdsale {\n    uint256 public cap;\n\n    constructor(uint256 _cap) public {\n        require(_cap > 0);\n        cap = _cap;\n    }\n    \n    function validPurchase() internal constant returns (bool) {\n        bool withinCap = weiRaised.add(msg.value) <= cap;\n        return super.validPurchase() && withinCap;\n    }\n\n    function hasEnded() public constant returns (bool) {\n        bool capReached = weiRaised >= cap;\n        return super.hasEnded() || capReached;\n    }\n}",
-  "sourcePath": "C:\\Users\\Alex\\Desktop\\KAPYTAL\\KYL Test\\contracts\\Crowdsale.sol",
+  "sourcePath": "/Users/josemiguel/Documents/Proyectos/Kapytal/Repo/contracts/Crowdsale.sol",
   "ast": {
-    "absolutePath": "/C/Users/Alex/Desktop/KAPYTAL/KYL Test/contracts/Crowdsale.sol",
+    "absolutePath": "/Users/josemiguel/Documents/Proyectos/Kapytal/Repo/contracts/Crowdsale.sol",
     "exportedSymbols": {
       "CappedCrowdsale": [
         339
@@ -241,7 +241,7 @@
         "src": "0:24:0"
       },
       {
-        "absolutePath": "/C/Users/Alex/Desktop/KAPYTAL/KYL Test/contracts/KYLToken.sol",
+        "absolutePath": "/Users/josemiguel/Documents/Proyectos/Kapytal/Repo/contracts/KYLToken.sol",
         "file": "./KYLToken.sol",
         "id": 2,
         "nodeType": "ImportDirective",
@@ -4592,7 +4592,7 @@
     "src": "0:3839:0"
   },
   "legacyAST": {
-    "absolutePath": "/C/Users/Alex/Desktop/KAPYTAL/KYL Test/contracts/Crowdsale.sol",
+    "absolutePath": "/Users/josemiguel/Documents/Proyectos/Kapytal/Repo/contracts/Crowdsale.sol",
     "exportedSymbols": {
       "CappedCrowdsale": [
         339
@@ -4619,7 +4619,7 @@
         "src": "0:24:0"
       },
       {
-        "absolutePath": "/C/Users/Alex/Desktop/KAPYTAL/KYL Test/contracts/KYLToken.sol",
+        "absolutePath": "/Users/josemiguel/Documents/Proyectos/Kapytal/Repo/contracts/KYLToken.sol",
         "file": "./KYLToken.sol",
         "id": 2,
         "nodeType": "ImportDirective",
@@ -8975,5 +8975,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-01T07:25:09.229Z"
+  "updatedAt": "2018-08-02T04:09:47.627Z"
 }
