@@ -121,7 +121,8 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
 
         uint256 total = tokens.mul(1 ether);
         uint256 value = total.div(rate);
-
+        
+        require(weiRaised <= weiRaised.add(value));
         if(stage == stages.pICO){
             require(softCap.sub(tokens) >= 0);
             softCap = softCap.sub(tokens);
@@ -214,6 +215,12 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
         token.mint(wallet, tokens.mul(1 ether));
 
         emit TeamMintedTokens(tokens);
+    }
+
+    function finalizeAll() public onlyOwner{
+        require(softCap + hardCap + teamCap + airdropCap == 0);
+        KYLToken(token).finishMinting();
+        KYLToken(token).transferOwnership(msg.sender);
     }
     
 	/**
