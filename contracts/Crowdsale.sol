@@ -57,7 +57,7 @@ contract Crowdsale {
     // low level token purchase function
     function buyTokens(address beneficiary) public payable {
         require(beneficiary != 0x0);
-        require(validPurchase());
+        validPurchase();
 
         uint256 weiAmount = msg.value;
 
@@ -78,11 +78,9 @@ contract Crowdsale {
     }
 
     // @return true if the transaction can buy tokens
-    function validPurchase() internal view returns (bool) {
-        uint256 current = block.number;
-        bool withinPeriod = current >= startBlock && current <= endBlock;
-        bool nonZeroPurchase = msg.value != 0;
-        return withinPeriod && nonZeroPurchase;
+    function validPurchase() internal view {
+        require(block.number >= startBlock && block.number <= endBlock);
+        require(msg.value != 0);
     }
 
     // @return true if crowdsale event has ended
@@ -95,17 +93,12 @@ contract WhitelistedCrowdsale is Crowdsale, Ownable {
     mapping (address => bool) whitelist;
 
     function addToWhitelist(address buyer) public onlyOwner {
-        require(buyer != 0x0);
+        require(buyer != address(0));
         whitelist[buyer] = true;
     }
 
     function isWhitelisted(address buyer) public view returns (bool) {
         return whitelist[buyer];
-    }
-
-    function validPurchase() internal view returns (bool) {
-        bool isValid = (!hasEnded()) && isWhitelisted(msg.sender);
-        return super.validPurchase() || isValid;
     }
 }
 
@@ -117,9 +110,8 @@ contract CappedCrowdsale is Crowdsale {
         cap = _cap;
     }
     
-    function validPurchase() internal constant returns (bool) {
-        bool withinCap = weiRaised.add(msg.value) <= cap;
-        return super.validPurchase() && withinCap;
+    function validPurchase() internal view {
+        require(weiRaised.add(msg.value) <= cap);
     }
 
     function hasEnded() public constant returns (bool) {

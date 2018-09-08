@@ -88,7 +88,7 @@ contract KYLCrowdsale is Pausable, WhitelistedCrowdsale, CappedCrowdsale{
     */
     function buyTokens(address who) public whenNotPaused payable{
         require(who != 0x0);
-        require(super.validPurchase());
+        super.validPurchase();
 
         uint256 value = msg.value;
         uint256 tokens = value.mul(rate);
